@@ -1,1 +1,1 @@
-# Decentralized Star Notary Service - Starter Code
+# Decentralized Star Notary Service
