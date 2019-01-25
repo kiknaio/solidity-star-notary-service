@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/blob/v2.0.0/contracts/token/ERC721/ERC721.sol";
 
 contract StarNotary is ERC721 {
 
@@ -37,7 +37,7 @@ contract StarNotary is ERC721 {
     }
 
     function putStarUpForSale(uint256 _tokenId, uint256 _price) public {
-        require(ownerOf(_tokenId) == msg.sender);
+        require(ownerOf(_tokenId) == msg.sender, "Only token owner can sell this token");
 
         starsForSale[_tokenId] = _price;
     }
@@ -60,17 +60,27 @@ contract StarNotary is ERC721 {
         starsForSale[_tokenId] = 0;
     }
 
+    // Write a function to Transfer a Star. The function should transfer a star from the address of the caller.
+    // The function should accept 2 arguments, the address to transfer the star to, and the token ID of the star.
+
+    // TODO: Need to be tested
+    function transferOwnership(address newOwner, uint256 _tokenId) public {
+        
+        require(ownerOf(_tokenId) == msg.sender, "Only token owner can tranfer this token");
+        require(msg.sender != newOwner, "New owner can't be existing one");
+
+        safeTransferFrom(msg.sender, newOwner, _tokenId);
+    }
+
     // Add a function called exchangeStars, so 2 users can exchange their star tokens...
     //Do not worry about the price, just write code to exchange stars between users.
+    function exchangeStars(uint256 ownedToken, uint256 desiredToken) public {
+        address desiredTokenOwner = ownerOf(desiredToken);
 
+        require(ownerOf(ownedToken) == msg.sender, "Only token owner can sell this token");
+        require(starsForSale[desiredToken] != 0, "Token should be listed on sales list");
 
-// Write a function to Transfer a Star. The function should transfer a star from the address of the caller.
-// The function should accept 2 arguments, the address to transfer the star to, and the token ID of the star.
-//
-    // TODO: just shell of the function
-    // function _transferOwnership(address _newOwner) internal {
-    //     require(_newOwner != address(0));
-    //     emit OwnershipTransferred(owner, _newOwner);
-    //     owner = _newOwner;
-    // }
+        safeTransferFrom(msg.sender, desiredTokenOwner, ownedToken);
+        safeTransferFrom(ownerOf(desiredToken), msg.sender, desiredToken);
+    }
 }
