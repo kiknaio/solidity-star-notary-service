@@ -1,8 +1,16 @@
 {
+  "env": {
+    "es6": true
+  },
+  "ecmaFeatures": {
+    "modules":true,
+    "arrowFunctions":true,
+    "classes":true
+  },
   "globals": {
     "assert": true,
     "artifacts": true,
     "contract" : true,
-    "it": true,
+    "it": true
   }
 }

@@ -1,21 +1,20 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
-import 'openzeppelin-solidity/contracts/token/ERC721/ERC721.sol';
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
 contract StarNotary is ERC721 {
 
     struct Star {
         string name;
     }
-
-//  Add a name and a symbol for your starNotary tokens
-
-//
+    //  Add a name and a symbol for your starNotary tokens
+    string public name = "StarNotary Token";
+    string public symbol = "SNT";
 
     mapping(uint256 => Star) public tokenIdToStarInfo;
     mapping(uint256 => uint256) public starsForSale;
 
-    function createStar(string _name, uint256 _tokenId) public {
+    function createStar(string memory _name, uint256 _tokenId) public {
         Star memory newStar = Star(_name);
 
         tokenIdToStarInfo[_tokenId] = newStar;
@@ -23,9 +22,19 @@ contract StarNotary is ERC721 {
         _mint(msg.sender, _tokenId);
     }
 
-// Add a function lookUptokenIdToStarInfo, that looks up the stars using the Token ID, and then returns the name of the star.
+    // Get token metadata
+    function name() external view returns (string) {
+        return name;
+    }
 
-//
+    function symbol() external view returns (string) {
+        return symbol;
+    }
+
+    // Add a function lookUptokenIdToStarInfo, that looks up the stars using the Token ID, and then returns the name of the star.
+    function lookUptokenIdToStarInfo(uint256 _tokenId) external view returns (string) {
+        return tokenIdToStarInfo[_tokenId].name;
+    }
 
     function putStarUpForSale(uint256 _tokenId, uint256 _price) public {
         require(ownerOf(_tokenId) == msg.sender);
@@ -49,15 +58,19 @@ contract StarNotary is ERC721 {
             msg.sender.transfer(msg.value - starCost);
         }
         starsForSale[_tokenId] = 0;
-      }
+    }
 
-// Add a function called exchangeStars, so 2 users can exchange their star tokens...
-//Do not worry about the price, just write code to exchange stars between users.
+    // Add a function called exchangeStars, so 2 users can exchange their star tokens...
+    //Do not worry about the price, just write code to exchange stars between users.
 
-//
 
 // Write a function to Transfer a Star. The function should transfer a star from the address of the caller.
 // The function should accept 2 arguments, the address to transfer the star to, and the token ID of the star.
 //
-
+    // TODO: just shell of the function
+    // function _transferOwnership(address _newOwner) internal {
+    //     require(_newOwner != address(0));
+    //     emit OwnershipTransferred(owner, _newOwner);
+    //     owner = _newOwner;
+    // }
 }
