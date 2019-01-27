@@ -1,4 +1,5 @@
 # Decentralized Star Notary Service
+![](https://cdn-images-1.medium.com/max/1600/1*QJGY1hx7p4Mq78_F34heZg.png)
 
 ERC-721 Token Name: StarNotary
 
