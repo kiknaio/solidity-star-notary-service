@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "https://github.com/OpenZeppelin/openzeppelin-solidity/blob/v2.0.0/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
 contract StarNotary is ERC721 {
 
@@ -78,9 +78,14 @@ contract StarNotary is ERC721 {
         address desiredTokenOwner = ownerOf(desiredToken);
 
         require(ownerOf(ownedToken) == msg.sender, "Only token owner can sell this token");
-        require(starsForSale[desiredToken] != 0, "Token should be listed on sales list");
+        require(starsForSale[desiredToken] > 0, "Token should be listed on sales list");
+        
+        // Send user1 token to user2
+        _removeTokenFrom(msg.sender, ownedToken);
+        _addTokenTo(desiredTokenOwner, ownedToken);
 
-        safeTransferFrom(msg.sender, desiredTokenOwner, ownedToken);
-        safeTransferFrom(ownerOf(desiredToken), msg.sender, desiredToken);
+        // Send user2 token to user1
+        _removeTokenFrom(desiredTokenOwner, desiredToken);
+        _addTokenTo(msg.sender, desiredToken);
     }
 }

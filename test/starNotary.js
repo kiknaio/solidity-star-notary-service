@@ -72,4 +72,44 @@ contract('StarNotary', async (accs) => {
   });
 
 // 2) 2 users can exchange their stars.
-// 3) Stars Tokens can be transferred from one address to another.
+
+  // 3) Stars Tokens can be transferred from one address to another.
+  it('Transfer token from first address to second', async () => {
+    const [user1, user2] = accounts;
+    const starId = 6;
+
+    // Create a star
+    await instance.createStar('awesome star', starId, {from: user1})
+    
+    assert.equal(await instance.ownerOf(starId), user1);
+
+    // Transfer star from user1 to user2
+    await instance.transferOwnership(user2, starId, { from: user1 });
+    
+    // // Check if user2 owns transfered star
+    assert.equal(await instance.ownerOf(starId), user2);
+  });
+
+
+  // 4) Users can exchange tokens (price doesn't matter)
+  it('Transfer token from first address to second', async () => {
+    const [user1, user2] = accounts;
+    const [firstStarId, secondStarId] = [7, 8];
+    const starPrice = web3.toWei(.01, "ether")
+
+    // User1 creates a star
+    await instance.createStar('Alpha', firstStarId, { from: user1 });
+    
+    // User2 creates a star
+    await instance.createStar('Omega', secondStarId, { from: user2 });
+
+    // User1 puts his star on sale
+    await instance.putStarUpForSale(firstStarId, starPrice, {from: user1});
+
+    // User2 wants to exchange his star to User1's star
+    await instance.exchangeStars(secondStarId, firstStarId, {from: user2});
+
+    // Check if exchange happened
+    assert.equal(await instance.ownerOf(secondStarId), user1);
+    assert.equal(await instance.ownerOf(firstStarId), user2);
+  });
