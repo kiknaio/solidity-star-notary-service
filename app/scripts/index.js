@@ -17,6 +17,15 @@ const StarNotary = contract(StarNotaryArtifact)
 let accounts
 let account
 
+const tokenIdToStarInfo = async () => {
+  const instance = await StarNotary.deployed();
+
+  const tokenId = document.getElementById("tokenId").value;
+
+  const tokenName = await instance.lookUptokenIdToStarInfo(tokenId, {from: account});
+  document.getElementById("tokenDetails").innerText = tokenId + " name is " + (tokenName || 'not recognized');
+}
+
 const createStar = async () => {
   const instance = await StarNotary.deployed();
   const name = document.getElementById("starName").value;
@@ -62,6 +71,10 @@ const App = {
   createStar: function () {
     createStar();
   },
+
+  tokenIdToStarInfo: function () {
+    tokenIdToStarInfo();
+  }
 
 }
 
